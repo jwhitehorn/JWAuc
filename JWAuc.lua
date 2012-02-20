@@ -47,7 +47,7 @@ function JWAucStop()
 end
 
 --call this to change the targetUnitPrice (in copper)
-function setTargetUnitPrice(price)
+function JWSetTargetUnitPrice(price)
 	targetUnitPrice = price
 end
 
