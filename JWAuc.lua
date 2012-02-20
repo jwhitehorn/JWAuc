@@ -1,10 +1,12 @@
 local frame, events = CreateFrame("FRAME"), {};
 local secondsSinceLastAddOnEvent = 0
+local version = "1.0"
 
 --********** Event Handling **********--
 
 function events:PLAYER_ENTERING_WORLD(...)
-  print("JWAuc Version 1.0 loaded");
+  print("JWAuc Version " .. version .." loaded");
+  print("type '/script JWAucHelp()' for more information")
 end
 
 function OnFrameUpdate(self, elapsed)
@@ -60,6 +62,20 @@ function JWSetDebugMode(debugMode)
 		print("JWAuc: Enter PRODUCTION mode...")
 	end
 	allowBidding = debugMode == false	--only allow bidding if we are NOT in debug mode
+end
+
+--a help function
+function JWAucHelp()
+	print("JWAuc: Help")
+	print("   JWAuc version " .. version)
+	--print("   Running: " .. isRunning)
+	--print("   Item to purchase: " .. itemToPurchase)
+	print("   Availble commands:")
+	print("      JWAucStart()")
+	print("      JWAucStop()")
+	print("      JWAucSetTargetUnitPrice(price)")
+	print("      JWAucSetDebugMode(debugMode)")
+	print("      JWAucHelp()")
 end
 
 --called every 10 seconds, this is the main event loop for JWAuc
