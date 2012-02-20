@@ -4,7 +4,7 @@ local secondsSinceLastAddOnEvent = 0
 --********** Event Handling **********--
 
 function events:PLAYER_ENTERING_WORLD(...)
-  print("JWAuc loaded");
+  print("JWAuc Version 1.0 loaded");
 end
 
 function OnFrameUpdate(self, elapsed)
@@ -26,6 +26,7 @@ end
 
 --********** Application Logic **********--
 local isRunning = false
+local allowBidding = false
 local auctionsPerPage = 50
 local targetUnitPrice = 2000
 local itemToPurchase = "Silk Cloth"
@@ -49,6 +50,16 @@ end
 --call this to change the targetUnitPrice (in copper)
 function JWSetTargetUnitPrice(price)
 	targetUnitPrice = price
+end
+
+--call this method (passing true or false) to enable or disable debug mode
+function JWSetDebugMode(debugMode)
+	if debugMode then
+		print("JWAuc: Entering debug mode...")
+	else
+		print("JWAuc: Enter PRODUCTION mode...")
+	end
+	allowBidding = debugMode == false	--only allow bidding if we are NOT in debug mode
 end
 
 --called every 10 seconds, this is the main event loop for JWAuc
@@ -87,7 +98,9 @@ function JWProcessItemsWithNameAndUnitPrice(n, desiredUnitPrice)
 			listingsUnitPrice = buyoutPrice / count
 			if listingsUnitPrice <= desiredUnitPrice then
 				print(name .. " count -> " .. count .. " buyout -> " .. buyoutPrice)
-				--PlaceAuctionBid("list", i, buyoutPrice)
+				if allowBidding then
+					PlaceAuctionBid("list", i, buyoutPrice)
+				end
 			end
 		end
 	end
