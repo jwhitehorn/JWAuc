@@ -28,6 +28,7 @@ end
 
 --********** Application Logic **********--
 local isRunning = false
+local coolDownRemaining = 0
 local allowBidding = false
 local auctionsPerPage = 50
 local targetUnitPrice = 2000
@@ -38,9 +39,9 @@ local numBatchAuctions, totalAuctions
 --call this to start the automated auction processing
 function JWAucStart()
 	print("JWAuc: Starting...")
+	coolDownRemaining = 0
 	isRunning = true
-	auctionSearchPage = 1
-	JWSimpleSearch(itemToPurchase, auctionSearchPage)
+	auctionSearchPage = 0
 end
 
 --call this to stop the automated auction processing
@@ -81,18 +82,47 @@ end
 --called every 10 seconds, this is the main event loop for JWAuc
 function JWOnAddOnEvent()
 	if isRunning then
-		if auctionSearchPage == 1 then
-			numBatchAuctions, totalAuctions = GetNumAuctionItems("list")
+		-------------------------
+		if coolDownRemaining > 0 then
+			coolDownRemaining = coolDownRemaining -1
+			if coolDownRemaining == 0 then
+				auctionSearchPage = 1
+				JWSimpleSearch(itemToPurchase, auctionSearchPage);
+			end
+			return --do nothing until cool down has passed
 		end
-		print("JWAuc: Processing page " .. auctionSearchPage)
+		-------------------------
+		if JWIsAuctionHouseReady() then
+	        --AuctionFrame:SetMovable(true)
+	        --AuctionFrame:SetClampedToScreen(true)
+	        --AuctionFrame:SetScript("OnMouseDown", function(self) self:StartMoving() end)
+	        --AuctionFrame:SetScript("OnMouseUp", function(self) self:StopMovingOrSizing() end)
+			
+			if auctionSearchPage == 0 then
+				auctionSearchPage = 1
+				JWSimpleSearch(itemToPurchase, auctionSearchPage)
+				return				
+			end
+			if auctionSearchPage == 1 then
+				numBatchAuctions, totalAuctions = GetNumAuctionItems("list")
+			end
+			print("JWAuc: Processing page " .. auctionSearchPage)
 		
-		JWProcessItemsWithNameAndUnitPrice(itemToPurchase, targetUnitPrice)
+			JWProcessItemsWithNameAndUnitPrice(itemToPurchase, targetUnitPrice)
 		
-		if totalAuctions <= auctionsPerPage * auctionSearchPage then
+			if totalAuctions <= auctionsPerPage * auctionSearchPage then
+				coolDownRemaining = 30  --wait 5 minutes between searches
+				auctionSearchPage = 0
+				return
+			end
+			auctionSearchPage = auctionSearchPage + 1
+			JWSimpleSearch(itemToPurchase, auctionSearchPage);
+		else
+			--reset everything
+			coolDownRemaining = 0
 			auctionSearchPage = 0
-		end
-		auctionSearchPage = auctionSearchPage + 1
-		JWSimpleSearch(itemToPurchase, auctionSearchPage);
+			print("JWAuc: Auction window not visible")
+		end			
 	end
 end
 
@@ -120,4 +150,8 @@ function JWProcessItemsWithNameAndUnitPrice(n, desiredUnitPrice)
 			end
 		end
 	end
+end
+
+function JWIsAuctionHouseReady()
+	return AuctionFrame ~= nil and AuctionFrame:IsVisible()
 end
