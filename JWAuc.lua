@@ -46,6 +46,10 @@ function JWAucStop()
 	isRunning = false
 end
 
+--call this to change the targetUnitPrice (in copper)
+function setTargetUnitPrice(price)
+	targetUnitPrice = price
+end
 
 --called every 10 seconds, this is the main event loop for JWAuc
 function JWOnAddOnEvent()
