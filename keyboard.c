@@ -5,16 +5,18 @@
 //gcc -o keyboard keyboard.c -Wall -framework ApplicationServices
 
 int main() {
+	int keyCode = 56;
 	srand ( time(NULL) );
 	printf("Keyboard SPACE keys coming in 30 seconds\n");
 	sleep(30);
 	while(1){
-		CGEventRef e = CGEventCreateKeyboardEvent (NULL, (CGKeyCode)49, true);
+		CGEventRef e = CGEventCreateKeyboardEvent (NULL, (CGKeyCode)keyCode, true);
 		CGEventPost(kCGSessionEventTap, e);
 		CFRelease(e);
-		e = CGEventCreateKeyboardEvent (NULL, (CGKeyCode)49, false);
+		e = CGEventCreateKeyboardEvent (NULL, (CGKeyCode)keyCode, false);
 		CGEventPost(kCGSessionEventTap, e);		
 		printf(".\n");
-		sleep((rand() % 1000) / 50.0 + 40.3);
+		//sleep((rand() % 1000) / 50.0 + 40.3);
+		sleep(10);
 	}
 }

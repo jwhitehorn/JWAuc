@@ -1,0 +1,35 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" 
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ 
+ ..\..\FrameXML\UI.xsd">
+  <Script File="JWAuc.lua"/>
+    <Frame name="JWAuc_MainFrame" parent="UIParent" hidden="false" enableMouse="true">
+	<Scripts>	<OnClick>
+            JWAucRuntime()
+	</OnClick></Scripts>
+	<Size>
+		<AbsDimension x="320" y="300"/>
+	</Size>
+	<Anchors>
+		<Anchor point="CENTER">
+			<Offset>
+				<AbsDimension x="0" y="0"/>
+			</Offset>
+		</Anchor>
+	</Anchors>
+<!--	
+	<Layers>
+		<Layer>
+			<FontString name="JWAuc_MainFrame_Title" inherits="GameTitleFont" text="JWAuc">
+				<Anchors>
+					<Anchor point="TOP" relativePoint="TOP">
+						<Offset>
+							<AbsDimension x="-10" y="8"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</FontString>
+		</Layer>
+	</Layers> -->
+    </Frame>
+</Ui> 

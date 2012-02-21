@@ -7,17 +7,22 @@ local version = "1.0"
 function events:PLAYER_ENTERING_WORLD(...)
   print("JWAuc Version " .. version .." loaded");
   print("type '/script JWAucHelp()' for more information")
+  if JWAuc_MainFrame == nil then
+	  print("not showing frame")
+  else
+	  print("showing frame!")
+  	JWAuc_MainFrame.Show()
+	JWAuc_MainFrame.Frame:SetBackdropColor(1,1,1,1)
+   end
 end
 
-function OnFrameUpdate(self, elapsed)
-    secondsSinceLastAddOnEvent = secondsSinceLastAddOnEvent + elapsed
-    if secondsSinceLastAddOnEvent >= 10 then
-		JWOnAddOnEvent()
-        secondsSinceLastAddOnEvent = 0
-    end
+function events:MODIFIER_STATE_CHANGED(key, state)
+	if state == 0 then
+		JWAucRuntime()
+	end
 end
 
-frame:SetScript("OnUpdate", OnFrameUpdate)
+frame:SetScript("OnMouseDown", JWAucRuntime)
 frame:SetScript("OnEvent", function(self, event, ...)
  events[event](self, ...); -- call one of the functions above
 end);
@@ -29,7 +34,7 @@ end
 --********** Application Logic **********--
 local isRunning = false
 local coolDownRemaining = 0
-local allowBidding = false
+local allowBidding = true
 local auctionsPerPage = 50
 local targetUnitPrice = 2000
 local itemToPurchase = "Silk Cloth"
@@ -80,7 +85,7 @@ function JWAucHelp()
 end
 
 --called every 10 seconds, this is the main event loop for JWAuc
-function JWOnAddOnEvent()
+function JWAucRuntime()
 	if isRunning then
 		-------------------------
 		if coolDownRemaining > 0 then
