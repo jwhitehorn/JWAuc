@@ -8,7 +8,14 @@ int main() {
 	int keyCode = 49; //space bar
 	srand ( time(NULL) );
 	printf("User input coming in 30 seconds\n");
-	sleep(30);
+	sleep(27);
+	printf("3...\n");
+	sleep(1);
+	printf("2...\n");
+	sleep(1);
+	printf("1...\n");
+	sleep(1);
+	printf("NOW!");
 	while(1){
 		CGEventRef ourEvent = CGEventCreate(NULL);
 		CGPoint point = CGEventGetLocation(ourEvent);
