@@ -13,7 +13,6 @@ int main() {
 		CGEventRef ourEvent = CGEventCreate(NULL);
 		CGPoint point = CGEventGetLocation(ourEvent);
 		
-	    // Left button down at 250x250
 	    CGEventRef click1_down = CGEventCreateMouseEvent(
 	        NULL, kCGEventLeftMouseDown,
 	        point,
