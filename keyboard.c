@@ -32,14 +32,16 @@ int main() {
 		CFRelease(click1_up);
 	    CFRelease(click1_down);
 		CFRelease(ourEvent);
-		/*
-		CGEventRef e = CGEventCreateKeyboardEvent (NULL, (CGKeyCode)keyCode, true);
-		CGEventPost(kCGSessionEventTap, e);
-		CFRelease(e);
-		e = CGEventCreateKeyboardEvent (NULL, (CGKeyCode)keyCode, false);
-		CGEventPost(kCGSessionEventTap, e);		
-		printf(".\n");*/
-		//sleep((rand() % 1000) / 50.0 + 40.3);
-		sleep(10);
+		
+		sleep(0.89);
+		if(rand() % 100 <= 2){	//2% chance
+			CGEventRef e = CGEventCreateKeyboardEvent (NULL, (CGKeyCode)keyCode, true);
+			CGEventPost(kCGSessionEventTap, e);
+			CFRelease(e);
+			e = CGEventCreateKeyboardEvent (NULL, (CGKeyCode)keyCode, false);
+			CGEventPost(kCGSessionEventTap, e);		
+			CFRelease(e);
+		}
+		sleep(9);
 	}
 }
