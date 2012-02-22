@@ -7,6 +7,7 @@ local version = "1.0"
 function events:PLAYER_ENTERING_WORLD(...)
   print("JWAuc Version " .. version .." loaded");
   print("type '/script JWAucHelp()' for more information")
+  JWAucStart()
 end
 
 frame:SetScript("OnEvent", function(self, event, ...)
