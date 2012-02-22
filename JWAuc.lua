@@ -117,7 +117,7 @@ function JWAucRuntime()
 			end
 		
 			if totalAuctions <= auctionsPerPage * auctionSearchPage then
-				coolDownRemaining = 30  --wait 5 minutes between searches
+				coolDownRemaining = 120  --wait 2 minutes between searches
 				auctionSearchPage = 0
 				return
 			end
