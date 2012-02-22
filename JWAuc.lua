@@ -1,5 +1,6 @@
 local frame, events = CreateFrame("FRAME"), {};
-local secondsSinceLastAddOnEvent = 0
+local secondsInCooldown = 0
+local coolDownRemaining = 0
 local version = "1.0"
 
 --********** Event Handling **********--
@@ -10,6 +11,18 @@ function events:PLAYER_ENTERING_WORLD(...)
   JWAucStart()
 end
 
+function OnFrameUpdate(self, elapsed)
+	if coolDownRemaining <= 0 then
+		return
+	end
+    secondsInCooldown = secondsInCooldown + elapsed
+    if secondsInCooldown >= coolDownRemaining then
+		JWRemoveCooldown()
+        secondsInCooldown = 0
+    end
+end
+
+frame:SetScript("OnUpdate", OnFrameUpdate)
 frame:SetScript("OnEvent", function(self, event, ...)
  events[event](self, ...); -- call one of the functions above
 end);
@@ -20,7 +33,6 @@ end
 
 --********** Application Logic **********--
 local isRunning = false
-local coolDownRemaining = 0
 local allowBidding = true
 local auctionsPerPage = 50
 local targetUnitPrice = 2000
@@ -75,16 +87,17 @@ function JWBeep()
 	print("BEEP!")
 end
 
+function JWRemoveCooldown()
+	coolDownRemaining = 0
+	auctionSearchPage = 1
+	JWSimpleSearch(itemToPurchase, auctionSearchPage);
+end
+
 --called every 10 seconds, this is the main event loop for JWAuc
 function JWAucRuntime()
 	if isRunning then
 		-------------------------
 		if coolDownRemaining > 0 then
-			coolDownRemaining = coolDownRemaining -1
-			if coolDownRemaining == 0 then
-				auctionSearchPage = 1
-				JWSimpleSearch(itemToPurchase, auctionSearchPage);
-			end
 			return --do nothing until cool down has passed
 		end
 		-------------------------
