@@ -7,22 +7,8 @@ local version = "1.0"
 function events:PLAYER_ENTERING_WORLD(...)
   print("JWAuc Version " .. version .." loaded");
   print("type '/script JWAucHelp()' for more information")
-  if JWAuc_MainFrame == nil then
-	  print("not showing frame")
-  else
-	  print("showing frame!")
-  	JWAuc_MainFrame.Show()
-	JWAuc_MainFrame.Frame:SetBackdropColor(1,1,1,1)
-   end
 end
 
-function events:MODIFIER_STATE_CHANGED(key, state)
-	if state == 0 then
-		JWAucRuntime()
-	end
-end
-
-frame:SetScript("OnMouseDown", JWAucRuntime)
 frame:SetScript("OnEvent", function(self, event, ...)
  events[event](self, ...); -- call one of the functions above
 end);
@@ -101,12 +87,7 @@ function JWAucRuntime()
 			return --do nothing until cool down has passed
 		end
 		-------------------------
-		if JWIsAuctionHouseReady() then
-	        --AuctionFrame:SetMovable(true)
-	        --AuctionFrame:SetClampedToScreen(true)
-	        --AuctionFrame:SetScript("OnMouseDown", function(self) self:StartMoving() end)
-	        --AuctionFrame:SetScript("OnMouseUp", function(self) self:StopMovingOrSizing() end)
-			
+		if JWIsAuctionHouseReady() then			
 			if auctionSearchPage == 0 then
 				auctionSearchPage = 1
 				JWSimpleSearch(itemToPurchase, auctionSearchPage)
@@ -117,7 +98,9 @@ function JWAucRuntime()
 			end
 			print("JWAuc: Processing page " .. auctionSearchPage)
 		
-			JWProcessItemsWithNameAndUnitPrice(itemToPurchase, targetUnitPrice)
+			if JWProcessItemsWithNameAndUnitPrice(itemToPurchase, targetUnitPrice) then
+				return --stop right now, we bought something and need to wait for the next mouse click to continue
+			end
 		
 			if totalAuctions <= auctionsPerPage * auctionSearchPage then
 				coolDownRemaining = 30  --wait 5 minutes between searches
@@ -155,10 +138,12 @@ function JWProcessItemsWithNameAndUnitPrice(n, desiredUnitPrice)
 				print(name .. " count -> " .. count .. " buyout -> " .. buyoutPrice)
 				if allowBidding then
 					PlaceAuctionBid("list", i, buyoutPrice)
+					return true
 				end
 			end
 		end
 	end
+	return false
 end
 
 function JWIsAuctionHouseReady()
