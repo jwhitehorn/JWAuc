@@ -84,6 +84,10 @@ function JWAucHelp()
 	print("      JWAucHelp()")
 end
 
+function JWBeep()
+	print("BEEP!")
+end
+
 --called every 10 seconds, this is the main event loop for JWAuc
 function JWAucRuntime()
 	if isRunning then
