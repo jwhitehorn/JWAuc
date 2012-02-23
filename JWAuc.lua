@@ -6,6 +6,7 @@ local version = "1.0"
 --********** Event Handling **********--
 
 function events:PLAYER_ENTERING_WORLD(...)
+  JWAuc_MainFrame:Hide()
   print("JWAuc Version " .. version .." loaded");
   print("type '/script JWAucHelp()' for more information")
   JWAucStart()
@@ -46,12 +47,14 @@ function JWAucStart()
 	coolDownRemaining = 0
 	isRunning = true
 	auctionSearchPage = 0
+	JWAuc_MainFrame:Show()
 end
 
 --call this to stop the automated auction processing
 function JWAucStop()
 	print("JWAuc: Stopping...")
 	isRunning = false
+	JWAuc_MainFrame:Hide()
 end
 
 --call this to change the targetUnitPrice (in copper)
